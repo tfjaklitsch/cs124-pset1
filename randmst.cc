@@ -199,7 +199,6 @@ double prim_algorithm_0(struct graph* graph, int n) {
 			max_dist = dist[i];
 		}
 	}
-	fprintf(stdout,"max dist %f\n", max_dist);
 	return sum;
 }
 
@@ -228,7 +227,6 @@ int main(int argc, char *argv[]) {
 		double trials[numtrials];
 		for (int i = 0; i < numtrials; i++) {
 			struct graph* g = create_weighted_graph_00(numpoints);
-			fprintf(stdout, "done building\n");
 			trials[i] = prim_algorithm_0(g, numpoints);
 		}
 		double average = 0;
@@ -245,7 +243,6 @@ int main(int argc, char *argv[]) {
 		double trials_cube[numtrials];
 		for (int i = 0; i < numtrials; i++) {
 			struct graph* g = create_weighted_graph_cube(numpoints, dimension);
-			fprintf(stdout, "done building\n");
 			trials_cube[i] = prim_algorithm_0(g, numpoints);
 		}
 		double average_cube = 0;
