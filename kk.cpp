@@ -43,8 +43,21 @@ long* gen_rand_sol(long* array, int n) {
 	return array;
 }
 
+long* rand_neighbor(long* array, int n) {
+	long index1 = ((long) rand() % n) + 1;
+	long index2 = index1;
+	while (index2 == index1) {
+		index2 = ((long) rand() % n) + 1;
+	}
+	long coin = ((long) rand() % 2);
+	if (coin == 0 ) {
+		array[index1] = -array[index1];
+	}
+	array[index2] = -array[index2];
+	return array;
+}
+
 long rep_rand(long* array, int n, int max_iter) {
-	srand((unsigned) time(NULL));
 	long start_sol[n];
 	for (int i = 0; i < n; i++) {
 		start_sol[i] = 0;
@@ -66,6 +79,35 @@ long rep_rand(long* array, int n, int max_iter) {
 		res2 = abs(res2);
 		if (res2 < res1) {
 			res1 = res2;
+		}
+	}
+	return res1;
+}
+
+long hill_climb(long* array, int n, int max_iter) {
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long* rand_sol = gen_rand_sol(start_sol, n);
+	long res1 = 0;
+	for (int i = 0; i < n; i++) {
+		res1 += array[i]*rand_sol[i];
+	}
+	res1 = abs(res1);
+	long* temp_rand_sol = gen_rand_sol(start_sol, n);
+	for (int iter = 1; iter < max_iter + 1; iter++) {
+		temp_rand_sol = rand_neighbor(rand_sol, n);
+		long res2 = 0;
+		for (int i = 0; i < n; i++) {
+			res2 += array[i]*temp_rand_sol[i];
+		}
+		res2 = abs(res2);
+		if (res2 < res1) {
+			res1 = res2;
+			for (int i = 0; i < n; i++) {
+				rand_sol[i] = temp_rand_sol[i];
+			}
 		}
 	}
 	return res1;
@@ -104,9 +146,7 @@ int main(int argc, char *argv[]) {
 
 		long* list_sorted;
 		list_sorted = bub_sort(np_list, 100);
-
 		long residue = kk_alg(list_sorted, 100);
-
 		fprintf(stdout, "%ld\n", residue);
 	}
 	
@@ -114,11 +154,17 @@ int main(int argc, char *argv[]) {
 		for (int j = 0; j < 100; j++) {
 			fscanf(file, "%ld", &np_list[j]);
 		}
-
 		int max_iter = 25000;
-
 		long residue = rep_rand(np_list, 100, max_iter);
+		fprintf(stdout, "%ld\n", residue);
+	}
 
+	if (alg_num == 2) {
+		for (int j = 0; j < 100; j++) {
+			fscanf(file, "%ld", &np_list[j]);
+		}
+		int max_iter = 25000;
+		long residue = hill_climb(np_list, 100, max_iter);
 		fprintf(stdout, "%ld\n", residue);
 	}
 
