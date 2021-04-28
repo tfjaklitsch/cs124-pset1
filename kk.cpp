@@ -233,7 +233,7 @@ int main(int argc, char *argv[]) {
 		fprintf(stdout, "%ld\n", residue);
 	}
 
-	if (alg_num == 3) {
+	if (alg_num > 2) {
 		for (int j = 0; j < 100; j++) {
 			fscanf(file, "%ld", &np_list[j]);
 		}
