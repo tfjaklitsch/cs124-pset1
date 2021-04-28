@@ -19,12 +19,18 @@ long* bub_sort(long* array, int n) {
 
 long kk_alg(long* array, int n) {
 	for (int i = 0; i < n-1; i++) {
-		long new_value = array[0] - array[1];
-		array[0] = 0;
-		array[1] = new_value;
-		array = bub_sort(array, n);
+		long new_value = array[i] - array[i+1];
+		array[i] = 0;
+		array[i+1] = new_value;
+		for (int j = i+1; j < n-1; j++) {
+			if (array[j] < array[j+1]) {
+				long temp_var = array[j+1];
+				array[j+1] = array[j];
+				array[j] = temp_var;
+			}
+		}
 	}
-	return array[0]; 
+	return array[n-1]; 
 }
 
 long* gen_rand_sol(long* array, int n) {
@@ -215,7 +221,32 @@ long rep_rand_pp(long* array, int n, int max_iter) {
 }
 
 long hill_climb_pp(long* array, int n, int max_iter) {
-	
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long* rand_sol = gen_rand_sol(start_sol, n);
+	long res1 = 0;
+	for (int i = 0; i < n; i++) {
+		res1 += array[i]*rand_sol[i];
+	}
+	res1 = abs(res1);
+	long* temp_rand_sol = gen_rand_sol(start_sol, n);
+	for (int iter = 1; iter < max_iter + 1; iter++) {
+		temp_rand_sol = rand_neighbor(rand_sol, n);
+		long res2 = 0;
+		for (int i = 0; i < n; i++) {
+			res2 += array[i]*temp_rand_sol[i];
+		}
+		res2 = abs(res2);
+		if (res2 < res1) {
+			res1 = res2;
+			for (int i = 0; i < n; i++) {
+				rand_sol[i] = temp_rand_sol[i];
+			}
+		}
+	}
+	return res1;
 }
 
 long sim_anneal_pp(long* array, int n, int max_iter) {
