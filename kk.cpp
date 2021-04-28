@@ -116,8 +116,9 @@ long hill_climb(long* array, int n, int max_iter) {
 double power(double x1, int x2) {
 	double solution = 1;
 	int counter = x2;
-	while (x2 > 0) {
+	while (counter > 0) {
 		solution = solution*x1;
+		counter -= 1;
 	}
 	return solution;
 }
