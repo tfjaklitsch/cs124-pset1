@@ -254,7 +254,44 @@ long hill_climb_pp(long* array, int n, int max_iter) {
 }
 
 long sim_anneal_pp(long* array, int n, int max_iter) {
-	
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long last_sol[n];
+	long* rand_sol = gen_rand_sol_pp(start_sol, n);
+	long res1 = 0;
+	long residue = 0;
+	for (int i = 0; i < n; i++) {
+		last_sol[i] = rand_sol[i];
+	}
+	res1 = calc_res_pp(rand_sol, array, n);
+	residue = res1;
+	long* temp_rand_sol = gen_rand_sol_pp(start_sol, n);
+	for (int iter = 1; iter <= max_iter; iter++) {
+		temp_rand_sol = rand_neighbor_pp(rand_sol, n);
+		long res2 = calc_res_pp(temp_rand_sol, array, n);
+		if (res2 < res1) {
+			res1 = res2;
+			for (int i = 0; i < n; i++) {
+				rand_sol[i] = temp_rand_sol[i];
+			}
+		}
+		else {
+			double p = power(e, -(res2 - res1)/T(iter));
+			double r = ((double) rand() / (RAND_MAX));
+			if (r <= p) {
+				res1 = res2;
+				for (int i = 0; i < n; i++) {
+					rand_sol[i] = temp_rand_sol[i];
+				}
+			}
+		}
+		if (res1 < residue) {
+			residue = res1;
+		}
+	}
+	return residue;
 }
 
 
