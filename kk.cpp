@@ -53,7 +53,7 @@ long* gen_rand_sol_pp(long* array, int n) {
 	for (int i = 0; i < n; i++) {
 		long r = ((long) rand() % n);
 		array[i] = r;
-		fprintf(stdout, "%i : %ld\n", i, r);
+		// fprintf(stdout, "%i : %ld\n", i, r);
 	}
 	return array;
 }
