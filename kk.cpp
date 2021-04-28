@@ -304,6 +304,33 @@ void printArray(long arr[], int size)
         
 } 
 
+long find_max(long* array) {
+	long* sorted_array = bub_sort(array, 100);
+	return sorted_array[0];
+}
+
+long find_min(long* array) {
+	long* sorted_array = bub_sort(array, 100);
+	return sorted_array[99];
+}
+
+double find_avg(long* array) {
+	double total = 0;
+	for (int i = 0; i < 100; i++) {
+		total += (double) array[i];
+	}
+	double avg = (total/100);
+	return avg;
+}
+
+double find_tot_time(double* array) {
+	double total = 0;
+	for (int i = 0; i < 100; i++) {
+		total += array[i];
+	}
+	return total;
+}
+
 
 int main(int argc, char *argv[]) {
 	srand(time(NULL));
@@ -318,43 +345,152 @@ int main(int argc, char *argv[]) {
 		fprintf(stderr, "Could not open input file");
 		return 1;
 	}
-	clock_t begin = clock();
+	// determine if 100 random cases or just one case from a file.
+	int path_determine = atoi(argv[1]);
+	if (path_determine == 0) {
+		long np_list[100]; 
+		for (int j = 0; j < 100; j++) {
+			fscanf(file, "%ld", &np_list[j]);
+		}
+		int max_iter = 25000;
+		long residue;
 
-	long np_list[100]; 
-	for (int j = 0; j < 100; j++) {
-		fscanf(file, "%ld", &np_list[j]);
-	}
-	int max_iter = 25000;
-	long residue;
+		if (alg_num == 0) {
+			long* list_sorted;
+			list_sorted = bub_sort(np_list, 100);
+			residue = kk_alg(list_sorted, 100);
+		}
+		else if (alg_num == 1) {
+			residue = rep_rand(np_list, 100, max_iter);
+		}
+		else if (alg_num == 2) {
+			residue = hill_climb(np_list, 100, max_iter);
+		}
+		else if (alg_num == 3) {
+			residue = sim_anneal(np_list, 100, max_iter);
+		}
+		else if (alg_num == 11) {
+			residue = rep_rand_pp(np_list, 100, max_iter);
+		}
+		else if (alg_num == 12) {
+			residue = hill_climb_pp(np_list, 100, max_iter);
+		}
+		if (alg_num == 13) {
+			residue = sim_anneal_pp(np_list, 100, max_iter);
+		}
 
-	if (alg_num == 0) {
-		long* list_sorted;
-		list_sorted = bub_sort(np_list, 100);
-		residue = kk_alg(list_sorted, 100);
+		fprintf(stdout, "%ld\n", residue);
 	}
-	else if (alg_num == 1) {
-		residue = rep_rand(np_list, 100, max_iter);
-	}
-	else if (alg_num == 2) {
-		residue = hill_climb(np_list, 100, max_iter);
-	}
-	else if (alg_num == 3) {
-		residue = sim_anneal(np_list, 100, max_iter);
-	}
-	else if (alg_num == 11) {
-		residue = rep_rand_pp(np_list, 100, max_iter);
-	}
-	else if (alg_num == 12) {
-		residue = hill_climb_pp(np_list, 100, max_iter);
-	}
-	if (alg_num == 13) {
-		residue = sim_anneal_pp(np_list, 100, max_iter);
-	}
+	else if (path_determine == 1) {
+		// generate 100 random instances
+		long** rand_probs = 0;
+		rand_probs = (long**) malloc(sizeof(long*) * 100);
+		for(int i = 0; i < 100; i++) {
+			rand_probs[i] = (long*) malloc(sizeof(long) * 100);
+			for(int j = 0; j < 100; j++) {
+				double r = ((double) rand() / (RAND_MAX));
+				fprintf(stdout, "%f\n", r);
+				r = (r* power(10, 12)) + 1;
+				long r_final = (long) r;
+				rand_probs[i][j] = r_final;
+				fprintf(stdout, "%ld\n", r_final);
+			}
+		}
+		// these will hold the residues for each algorithm
+		long kk_res[100];
+		long rep_rand_res[100];
+		long hill_climb_res[100];
+		long sim_anneal_res[100];
+		long rep_rand_pp_res[100];
+		long hill_climb_pp_res[100];
+		long sim_anneal_pp_res[100];
 
-	fprintf(stdout, "%ld\n", residue);
+		// these will track the time of the algorithm
 
+		double kk_time[100];
+		double rep_rand_time[100];
+		double hill_climb_time[100];
+		double sim_anneal_time[100];
+		double rep_rand_pp_time[100];
+		double hill_climb_pp_time[100];
+		double sim_anneal_pp_time[100];
 
-	clock_t end = clock();
-	double time = (double)(end - begin) / CLOCKS_PER_SEC;
+		long current_prob1[100];
+		long current_prob2[100];
+		long current_prob3[100];
+		long current_prob4[100];
+		long current_prob5[100];
+		long current_prob6[100];
+		long current_prob7[100];
+
+		int max_iter = 25000;
+
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				current_prob1[j] = rand_probs[i][j];
+				current_prob2[j] = rand_probs[i][j];
+				current_prob3[j] = rand_probs[i][j];
+				current_prob4[j] = rand_probs[i][j];
+				current_prob5[j] = rand_probs[i][j];
+				current_prob6[j] = rand_probs[i][j];
+				current_prob7[j] = rand_probs[i][j];
+			}
+			clock_t begin1 = clock();
+			long* sorted_prob = bub_sort(current_prob1, 100);
+			kk_res[i] = kk_alg(sorted_prob, 100);
+			fprintf(stdout, "current_prob1[0] %ld\n", current_prob1[0]);
+			clock_t end1 = clock();
+			kk_time[i] = (double)(end1 - begin1) / CLOCKS_PER_SEC;
+
+			clock_t begin2 = clock();
+			rep_rand_res[i] = rep_rand(current_prob2, 100, max_iter);
+			fprintf(stdout, "current_prob2[0] %ld\n", current_prob2[0]);
+			clock_t end2 = clock();
+			rep_rand_time[i] = (double)(end2 - begin2) / CLOCKS_PER_SEC;
+
+			clock_t begin3 = clock();
+			hill_climb_res[i] = hill_climb(current_prob3, 100, max_iter);
+			fprintf(stdout, "current_prob3[0] %ld\n", current_prob3[0]);
+			clock_t end3 = clock();
+			hill_climb_time[i] = (double)(end3 - begin3) / CLOCKS_PER_SEC;
+
+			clock_t begin4 = clock();
+			sim_anneal_res[i] = sim_anneal(current_prob4, 100, max_iter);
+			fprintf(stdout, "current_prob4[0] %ld\n", current_prob4[0]);
+			clock_t end4 = clock();
+			sim_anneal_time[i] = (double)(end4 - begin4) / CLOCKS_PER_SEC;
+
+			clock_t begin5 = clock();
+			rep_rand_pp_res[i] = rep_rand_pp(current_prob5, 100, max_iter);
+			fprintf(stdout, "current_prob5[0] %ld\n", current_prob5[0]);
+			clock_t end5 = clock();
+			rep_rand_pp_time[i] = (double)(end5 - begin5) / CLOCKS_PER_SEC;
+
+			clock_t begin6 = clock();
+			hill_climb_pp_res[i] = hill_climb_pp(current_prob6, 100, max_iter);
+			fprintf(stdout, "current_prob6[0] %ld\n", current_prob6[0]);
+			clock_t end6 = clock();
+			hill_climb_pp_time[i] = (double)(end6 - begin6) / CLOCKS_PER_SEC;
+
+			clock_t begin7 = clock();
+			sim_anneal_pp_res[i] = sim_anneal_pp(current_prob7, 100, max_iter);
+			fprintf(stdout, "current_prob7[0] %ld\n", current_prob7[0]);
+			clock_t end7 = clock();
+			sim_anneal_pp_time[i] = (double)(end7 - begin7) / CLOCKS_PER_SEC;
+
+		}
+		
+		
+		fprintf(stdout, "kk:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(kk_res), find_min(kk_res), find_avg(kk_res), find_tot_time(kk_time));
+		fprintf(stdout, "rep_rand:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(rep_rand_res), find_min(rep_rand_res), find_avg(rep_rand_res), find_tot_time(rep_rand_time));
+		fprintf(stdout, "hill_climb:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(hill_climb_res), find_min(hill_climb_res), find_avg(hill_climb_res), find_tot_time(hill_climb_time));
+		fprintf(stdout, "sim_anneal:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(sim_anneal_res), find_min(sim_anneal_res), find_avg(sim_anneal_res), find_tot_time(sim_anneal_time));
+		fprintf(stdout, "rep_rand_pp:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(rep_rand_pp_res), find_min(rep_rand_pp_res), find_avg(rep_rand_pp_res), find_tot_time(rep_rand_pp_time));
+		fprintf(stdout, "hill_climb_pp:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(hill_climb_pp_res), find_min(hill_climb_pp_res), find_avg(hill_climb_pp_res), find_tot_time(hill_climb_pp_time));
+		fprintf(stdout, "sim_anneal_pp:\n max: %ld \n min: %ld \n avg: %f\n time: %f\n\n", find_max(sim_anneal_pp_res), find_min(sim_anneal_pp_res), find_avg(sim_anneal_pp_res), find_tot_time(sim_anneal_pp_time));
+
+	}
+	
+
 	// fprintf(stdout, "time taken %f", time);
 }
