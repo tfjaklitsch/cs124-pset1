@@ -38,11 +38,11 @@ void printArray(long arr[], int size)
 
 
 int main(int argc, char *argv[]) {
-	if (argc != 3) {
-		fprintf(stderr, "Error: expecting 1 arguments");
+	if (argc != 4) {
+		fprintf(stderr, "Error: expecting 1 arguments\n");
 		return 1;
 	}
-	FILE *file = fopen(argv[2], "r");
+	FILE *file = fopen(argv[3], "r");
 	if (file == 0) {
 		fprintf(stderr, "Could not open input file");
 		return 1;
