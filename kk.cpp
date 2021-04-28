@@ -1,9 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-#include <cmath>
 
-
+double e = 2.718281828459045;
 
 long* bub_sort(long* array, int n) {
 	for (int i = 0; i < n-1; i++) {
@@ -114,8 +113,21 @@ long hill_climb(long* array, int n, int max_iter) {
 	return res1;
 }
 
+double power(double x1, int x2) {
+	double solution = 1;
+	int counter = x2;
+	while (x2 > 0) {
+		solution = solution*x1;
+	}
+	return solution;
+}
+
+int round_down (double x) {
+	return (int) x;
+}
+
 double T(int iter) {
-	return pow(10, 10)*pow(.8, floor(((double) iter)/300));
+	return power(10, 10)*power(.8, round_down(((double) iter)/300));
 }
 
 long sim_anneal (long* array, int n, int max_iter) {
@@ -148,7 +160,7 @@ long sim_anneal (long* array, int n, int max_iter) {
 			}
 		}
 		else {
-			double p = exp(-(res2 - res1)/T(iter));
+			double p = power(e, -(res2 - res1)/T(iter));
 			double r = ((double) rand() / (RAND_MAX));
 			if (r <= p) {
 				res1 = res2;
