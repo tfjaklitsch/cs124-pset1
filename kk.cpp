@@ -29,7 +29,7 @@ long kk_alg(long* array, int n) {
 
 long* gen_rand_sol(int n) {
 	srand((unsigned) time(NULL));
-	long* array;
+	long array[n];
 	for (int i = 0; i < n; i++) {
 		long r = ((long) rand() % 2);
 		if (r == 0) {
@@ -46,9 +46,13 @@ long* gen_rand_sol(int n) {
 }
 
 long rep_rand(long* array, int n, int max_iter) {
+	fprintf(stdout, "start\n");
 	long* rand_sol = gen_rand_sol(n);
+	fprintf(stdout, "start2\n");
+	long* temp_rand_sol;
 	for (int iter = 1; iter < max_iter + 1; iter++) {
-		long* temp_rand_sol = gen_rand_sol(n);
+		fprintf(stdout, "here %i \n", iter);
+		temp_rand_sol = gen_rand_sol(n);
 		long res1 = 0;
 		long res2 = 0;
 		for (int i = 0; i < n; i++) {
