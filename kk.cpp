@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 
 
 
@@ -113,6 +114,57 @@ long hill_climb(long* array, int n, int max_iter) {
 	return res1;
 }
 
+double T(int iter) {
+	return pow(10, 10)*pow(.8, floor(((double) iter)/300));
+}
+
+long sim_anneal (long* array, int n, int max_iter) {
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long last_sol[n];
+	long* rand_sol = gen_rand_sol(start_sol, n);
+	long res1 = 0;
+	long residue = 0;
+	for (int i = 0; i < n; i++) {
+		res1 += array[i]*rand_sol[i];
+		last_sol[i] = rand_sol[i];
+	}
+	res1 = abs(res1);
+	residue = res1;
+	long* temp_rand_sol = gen_rand_sol(start_sol, n);
+	for (int iter = 1; iter <= max_iter; iter++) {
+		temp_rand_sol = rand_neighbor(rand_sol, n);
+		long res2 = 0;
+		for (int i = 0; i < n; i++) {
+			res2 += array[i]*temp_rand_sol[i];
+		}
+		res2 = abs(res2);
+		if (res2 < res1) {
+			res1 = res2;
+			for (int i = 0; i < n; i++) {
+				rand_sol[i] = temp_rand_sol[i];
+			}
+		}
+		else {
+			double p = exp(-(res2 - res1)/T(iter));
+			double r = ((double) rand() / (RAND_MAX));
+			if (r <= p) {
+				res1 = res2;
+				for (int i = 0; i < n; i++) {
+					rand_sol[i] = temp_rand_sol[i];
+				}
+			}
+		}
+		if (res1 < residue) {
+			residue = res1;
+		}
+	}
+	return residue;
+}
+
+
 void printArray(long arr[], int size) 
 { 
     int i; 
@@ -165,6 +217,15 @@ int main(int argc, char *argv[]) {
 		}
 		int max_iter = 25000;
 		long residue = hill_climb(np_list, 100, max_iter);
+		fprintf(stdout, "%ld\n", residue);
+	}
+
+	if (alg_num == 3) {
+		for (int j = 0; j < 100; j++) {
+			fscanf(file, "%ld", &np_list[j]);
+		}
+		int max_iter = 25000;
+		long residue = sim_anneal(np_list, 100, max_iter);
 		fprintf(stdout, "%ld\n", residue);
 	}
 
