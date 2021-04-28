@@ -1,2 +1,2 @@
-randmst: randmst.cc
-	gcc randmst.cc -o randmst
+kk: kk.cpp
+	gcc kk.cpp -o kk
