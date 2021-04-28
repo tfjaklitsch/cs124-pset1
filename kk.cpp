@@ -39,9 +39,11 @@ void printArray(long arr[], int size)
 
 int main(int argc, char *argv[]) {
 	if (argc != 4) {
-		fprintf(stderr, "Error: expecting 1 arguments\n");
+		fprintf(stderr, "Error: expecting 3 arguments\n");
 		return 1;
 	}
+	int alg_num = atoi(argv[2]);
+
 	FILE *file = fopen(argv[3], "r");
 	if (file == 0) {
 		fprintf(stderr, "Could not open input file");
@@ -51,16 +53,19 @@ int main(int argc, char *argv[]) {
 
 	long np_list[100]; 
 	
-	for (int j = 0; j < 100; j++) {
-		fscanf(file, "%ld", &np_list[j]);
+	if (alg_num == 0) {
+		for (int j = 0; j < 100; j++) {
+			fscanf(file, "%ld", &np_list[j]);
+		}
+
+		long* list_sorted;
+		list_sorted = bub_sort(np_list, 100);
+
+		long residue = kk_alg(list_sorted, 100);
+
+		fprintf(stdout, "%ld\n", residue);
 	}
-
-	long* list_sorted;
-	list_sorted = bub_sort(np_list, 100);
-
-	long residue = kk_alg(list_sorted, 100);
-
-	fprintf(stdout, "%ld\n", residue);
+	
 
 	// printArray(list_sorted, 100);
 
