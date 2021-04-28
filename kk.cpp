@@ -43,6 +43,25 @@ long* gen_rand_sol(long* array, int n) {
 	return array;
 }
 
+long* gen_rand_sol_pp(long* array, int n) {
+	for (int i = 0; i < n; i++) {
+		long r = ((long) rand() % n);
+		array[i] = r;
+	}
+	return array;
+}
+
+long calc_res_pp(long* array, int n) {
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	for (int j = 1; j < n; j++) {
+		start_sol[array[j]] += start_sol[j];
+	}
+	return kk_alg(start_sol, n);
+}
+
 long* rand_neighbor(long* array, int n) {
 	long index1 = ((long) rand() % n) + 1;
 	long index2 = index1;
@@ -177,6 +196,32 @@ long sim_anneal (long* array, int n, int max_iter) {
 	return residue;
 }
 
+long rep_rand_pp(long* array, int n, int max_iter) {
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long* rand_sol = gen_rand_sol_pp(start_sol, n);
+	long res1 = calc_res_pp(rand_sol, n);
+	long* temp_rand_sol = gen_rand_sol(start_sol, n);
+	for (int iter = 1; iter < max_iter + 1; iter++) {
+		temp_rand_sol = gen_rand_sol_pp(start_sol, n);
+		long res2 = calc_res_pp(temp_rand_sol, n);
+		if (res2 < res1) {
+			res1 = res2;
+		}
+	}
+	return res1;
+}
+
+long hill_climb_pp(long* array, int n, int max_iter) {
+	
+}
+
+long sim_anneal_pp(long* array, int n, int max_iter) {
+	
+}
+
 
 void printArray(long arr[], int size) 
 { 
@@ -203,46 +248,37 @@ int main(int argc, char *argv[]) {
 	clock_t begin = clock();
 
 	long np_list[100]; 
-	
-	if (alg_num == 0) {
-		for (int j = 0; j < 100; j++) {
-			fscanf(file, "%ld", &np_list[j]);
-		}
+	for (int j = 0; j < 100; j++) {
+		fscanf(file, "%ld", &np_list[j]);
+	}
+	int max_iter = 25000;
+	long residue;
 
+	if (alg_num == 0) {
 		long* list_sorted;
 		list_sorted = bub_sort(np_list, 100);
-		long residue = kk_alg(list_sorted, 100);
-		fprintf(stdout, "%ld\n", residue);
+		residue = kk_alg(list_sorted, 100);
 	}
-	
-	if (alg_num == 1) {
-		for (int j = 0; j < 100; j++) {
-			fscanf(file, "%ld", &np_list[j]);
-		}
-		int max_iter = 25000;
-		long residue = rep_rand(np_list, 100, max_iter);
-		fprintf(stdout, "%ld\n", residue);
+	else if (alg_num == 1) {
+		residue = rep_rand(np_list, 100, max_iter);
 	}
-
-	if (alg_num == 2) {
-		for (int j = 0; j < 100; j++) {
-			fscanf(file, "%ld", &np_list[j]);
-		}
-		int max_iter = 25000;
-		long residue = hill_climb(np_list, 100, max_iter);
-		fprintf(stdout, "%ld\n", residue);
+	else if (alg_num == 2) {
+		residue = hill_climb(np_list, 100, max_iter);
 	}
-
-	if (alg_num > 2) {
-		for (int j = 0; j < 100; j++) {
-			fscanf(file, "%ld", &np_list[j]);
-		}
-		int max_iter = 25000;
-		long residue = sim_anneal(np_list, 100, max_iter);
-		fprintf(stdout, "%ld\n", residue);
+	else if (alg_num == 3) {
+		residue = sim_anneal(np_list, 100, max_iter);
+	}
+	else if (alg_num == 11) {
+		residue = rep_rand_pp(np_list, 100, max_iter);
+	}
+	else if (alg_num == 12) {
+		residue = hill_climb_pp(np_list, 100, max_iter);
+	}
+	if (alg_num == 13) {
+		residue = sim_anneal_pp(np_list, 100, max_iter);
 	}
 
-	// printArray(list_sorted, 100);
+	fprintf(stdout, "%ld\n", residue);
 
 
 	clock_t end = clock();
