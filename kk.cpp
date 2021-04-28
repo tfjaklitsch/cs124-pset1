@@ -27,9 +27,7 @@ long kk_alg(long* array, int n) {
 	return array[0]; 
 }
 
-long* gen_rand_sol(int n) {
-	srand((unsigned) time(NULL));
-	long array[n];
+long* gen_rand_sol(long* array, int n) {
 	for (int i = 0; i < n; i++) {
 		long r = ((long) rand() % 2);
 		if (r == 0) {
@@ -46,28 +44,36 @@ long* gen_rand_sol(int n) {
 }
 
 long rep_rand(long* array, int n, int max_iter) {
-	fprintf(stdout, "start\n");
-	long* rand_sol = gen_rand_sol(n);
+	srand((unsigned) time(NULL));
+	long start_sol[n];
+	for (int i = 0; i < n; i++) {
+		start_sol[i] = 0;
+	}
+	long* rand_sol = gen_rand_sol(start_sol, n);
+	long res1 = 0;
+	for (int i = 0; i < n; i++) {
+		res1 += array[i]*rand_sol[i];
+	}
+	res1 = abs(res1);
 	fprintf(stdout, "start2\n");
-	long* temp_rand_sol;
+	long* temp_rand_sol = gen_rand_sol(start_sol, n);
 	for (int iter = 1; iter < max_iter + 1; iter++) {
-		fprintf(stdout, "here %i \n", iter);
-		temp_rand_sol = gen_rand_sol(n);
-		long res1 = 0;
+		// fprintf(stdout, "here %i \n", iter);
+		temp_rand_sol = gen_rand_sol(start_sol, n);
 		long res2 = 0;
 		for (int i = 0; i < n; i++) {
-			res1 += array[i]*rand_sol[i];
 			res2 += array[i]*temp_rand_sol[i];
 		}
+		res2 = abs(res2);
 		if (res2 < res1) {
-			rand_sol = temp_rand_sol;
+			res1 = res2;
+		}
+		if (iter < 100) {
+			fprintf(stdout, "res2 : %ld\n", res2);
+			fprintf(stdout, "res1 : %ld\n", res1);
 		}
 	}
-	long res = 0;
-	for (int i = 0; i < n; i++) {
-		res += array[i]*rand_sol[i];
-	}
-	return res;
+	return res1;
 }
 
 void printArray(long arr[], int size) 
