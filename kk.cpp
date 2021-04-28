@@ -53,6 +53,7 @@ long* gen_rand_sol_pp(long* array, int n) {
 	for (int i = 0; i < n; i++) {
 		long r = ((long) rand() % n);
 		array[i] = r;
+		fprintf(stdout, "%i : %ld\n", i, r);
 	}
 	return array;
 }
@@ -62,10 +63,11 @@ long calc_res_pp(long* arrayP, long* arrayA, int n) {
 	for (int i = 0; i < n; i++) {
 		start_sol[i] = 0;
 	}
-	for (int j = 1; j < n; j++) {
+	for (int j = 0; j < n; j++) {
 		start_sol[arrayP[j]] += arrayA[j];
 	}
-	return kk_alg(start_sol, n);
+	long* sol_array = bub_sort(start_sol, n);
+	return kk_alg(sol_array, n);
 }
 
 long* rand_neighbor(long* array, int n) {
@@ -216,6 +218,10 @@ long rep_rand_pp(long* array, int n, int max_iter) {
 		if (res2 < res1) {
 			res1 = res2;
 		}
+		if (iter < 100) {
+			fprintf(stdout, "res1: %ld\n", res1);
+			fprintf(stdout, "res2: %ld\n", res2);
+		}
 	}
 	return res1;
 }
@@ -265,6 +271,7 @@ void printArray(long arr[], int size)
 
 
 int main(int argc, char *argv[]) {
+	srand(time(NULL));
 	if (argc != 4) {
 		fprintf(stderr, "Error: expecting 3 arguments\n");
 		return 1;
