@@ -27,6 +27,45 @@ long kk_alg(long* array, int n) {
 	return array[0]; 
 }
 
+long* gen_rand_sol(int n) {
+	srand((unsigned) time(NULL));
+	long* array;
+	for (int i = 0; i < n; i++) {
+		long r = ((long) rand() % 2);
+		if (r == 0) {
+			array[i] = 1;
+		}
+		else if (r == 1) {
+			array[i] = -1;
+		}
+		else {
+			fprintf(stderr, "Houston, we have a problem\n");
+		}
+	}
+	return array;
+}
+
+long rep_rand(long* array, int n, int max_iter) {
+	long* rand_sol = gen_rand_sol(n);
+	for (int iter = 1; iter < max_iter + 1; iter++) {
+		long* temp_rand_sol = gen_rand_sol(n);
+		long res1 = 0;
+		long res2 = 0;
+		for (int i = 0; i < n; i++) {
+			res1 += array[i]*rand_sol[i];
+			res2 += array[i]*temp_rand_sol[i];
+		}
+		if (res2 < res1) {
+			rand_sol = temp_rand_sol;
+		}
+	}
+	long res = 0;
+	for (int i = 0; i < n; i++) {
+		res += array[i]*rand_sol[i];
+	}
+	return res;
+}
+
 void printArray(long arr[], int size) 
 { 
     int i; 
@@ -66,6 +105,17 @@ int main(int argc, char *argv[]) {
 		fprintf(stdout, "%ld\n", residue);
 	}
 	
+	if (alg_num == 1) {
+		for (int j = 0; j < 100; j++) {
+			fscanf(file, "%ld", &np_list[j]);
+		}
+
+		int max_iter = 25000;
+
+		long residue = rep_rand(np_list, 100, max_iter);
+
+		fprintf(stdout, "%ld\n", residue);
+	}
 
 	// printArray(list_sorted, 100);
 
