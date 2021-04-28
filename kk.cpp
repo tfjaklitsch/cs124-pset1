@@ -57,13 +57,13 @@ long* gen_rand_sol_pp(long* array, int n) {
 	return array;
 }
 
-long calc_res_pp(long* array, int n) {
+long calc_res_pp(long* arrayP, long* arrayA, int n) {
 	long start_sol[n];
 	for (int i = 0; i < n; i++) {
 		start_sol[i] = 0;
 	}
 	for (int j = 1; j < n; j++) {
-		start_sol[array[j]] += start_sol[j];
+		start_sol[arrayP[j]] += arrayA[j];
 	}
 	return kk_alg(start_sol, n);
 }
@@ -208,11 +208,11 @@ long rep_rand_pp(long* array, int n, int max_iter) {
 		start_sol[i] = 0;
 	}
 	long* rand_sol = gen_rand_sol_pp(start_sol, n);
-	long res1 = calc_res_pp(rand_sol, n);
+	long res1 = calc_res_pp(rand_sol, array, n);
 	long* temp_rand_sol = gen_rand_sol(start_sol, n);
 	for (int iter = 1; iter < max_iter + 1; iter++) {
 		temp_rand_sol = gen_rand_sol_pp(start_sol, n);
-		long res2 = calc_res_pp(temp_rand_sol, n);
+		long res2 = calc_res_pp(temp_rand_sol, array, n);
 		if (res2 < res1) {
 			res1 = res2;
 		}
