@@ -55,7 +55,6 @@ long rep_rand(long* array, int n, int max_iter) {
 		res1 += array[i]*rand_sol[i];
 	}
 	res1 = abs(res1);
-	fprintf(stdout, "start2\n");
 	long* temp_rand_sol = gen_rand_sol(start_sol, n);
 	for (int iter = 1; iter < max_iter + 1; iter++) {
 		// fprintf(stdout, "here %i \n", iter);
@@ -67,10 +66,6 @@ long rep_rand(long* array, int n, int max_iter) {
 		res2 = abs(res2);
 		if (res2 < res1) {
 			res1 = res2;
-		}
-		if (iter < 100) {
-			fprintf(stdout, "res2 : %ld\n", res2);
-			fprintf(stdout, "res1 : %ld\n", res1);
 		}
 	}
 	return res1;
