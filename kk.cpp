@@ -218,10 +218,10 @@ long rep_rand_pp(long* array, int n, int max_iter) {
 		if (res2 < res1) {
 			res1 = res2;
 		}
-		if (iter < 100) {
+		/*if (iter < 100) {
 			fprintf(stdout, "res1: %ld\n", res1);
 			fprintf(stdout, "res2: %ld\n", res2);
-		}
+		}*/
 	}
 	return res1;
 }
